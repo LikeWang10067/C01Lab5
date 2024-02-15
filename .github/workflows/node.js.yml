@@ -9,7 +9,14 @@
   jobs:
       build:
           name: Backend test
-          runs-on: ubuntu-latest
+          runs-on: ubuntu-latestservices:
+
+          services:
+              mongodb:
+                  image: mongo
+                  ports:
+                      - 27017:27017
+                  options: --health-cmd "mongosh --eval 'db.runCommand(\"ping\").ok' localhost/test" --health-interval 10s --health-timeout 5s --health-retries 5
 
           defaults:
               run:
@@ -27,10 +34,5 @@
                 with:
                   node-version: ${{ matrix.node-version }}
               - run: npm i
-              - run: cd ~
-              - run: cd backend
-              - run: mkdir data
-              - run: mkdir data/db
-              - run: mongod --dbpath=./data/db
-              - run: npm run dev
+              - run: node server.js &
               - run: npm test
