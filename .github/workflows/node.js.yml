@@ -27,6 +27,8 @@
                 with:
                   node-version: ${{ matrix.node-version }}
               - run: npm i
+              - run: cd ~
+              - run: cd backend
               - run: mkdir data
               - run: mkdir data/db
               - run: mongod --dbpath=./data/db
