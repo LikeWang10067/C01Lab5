@@ -9,7 +9,7 @@
   jobs:
       build:
           name: Backend test
-          runs-on: ubuntu-latestservices:
+          runs-on: ubuntu-latest
 
           services:
               mongodb:
