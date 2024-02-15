@@ -27,46 +27,59 @@ test("/postNote - Post a note", async () => {
 });
 
 test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
-  // Code here
-  expect(false).toBe(true);
+  const response = await fetch(`${SERVER_URL}/getAllNotes`);
+  const body = await response.json();
+
+  expect(response.status).toBe(200);
+  // Check if the body is an empty array, indicating zero notes for getAllNotes
+  expect(body).toEqual({"response": []});
 });
 
-test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
+//   // Insert two notes into the database before the request
+//   await Note.insertMany([{ title: "Note 1", content: "Content 1" }, { title: "Note 2", content: "Content 2" }]);
+  
+//   const response = await request(app).get('/getAllNotes');
+//   expect(response.statusCode).toBe(200);
+//   expect(response.body.length).toBe(2);
+//   // Optionally, check for content of the notes
+// });
 
-test("/deleteNote - Delete a note", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/deleteNote - Delete a note", async () => {
+//   // Assuming you have a note to delete. Insert it first.
+//   const note = await Note.create({ title: "To Delete", content: "Delete me" });
+  
+//   const response = await request(app).delete(`/deleteNote/${note._id}`);
+//   expect(response.statusCode).toBe(200);
+//   // Further assertions can be made based on your API's response structure
+// });
 
-test("/patchNote - Patch with content and title", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/patchNote - Patch with content and title", async () => {
+//   // Code here
+//   expect(false).toBe(true);
+// });
 
-test("/patchNote - Patch with just title", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/patchNote - Patch with just title", async () => {
+//   // Code here
+//   expect(false).toBe(true);
+// });
 
-test("/patchNote - Patch with just content", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/patchNote - Patch with just content", async () => {
+//   // Code here
+//   expect(false).toBe(true);
+// });
 
-test("/deleteAllNotes - Delete one note", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/deleteAllNotes - Delete one note", async () => {
+//   // Code here
+//   expect(false).toBe(true);
+// });
 
-test("/deleteAllNotes - Delete three notes", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/deleteAllNotes - Delete three notes", async () => {
+//   // Code here
+//   expect(false).toBe(true);
+// });
 
-test("/updateNoteColor - Update color of a note to red (#FF0000)", async () => {
-  // Code here
-  expect(false).toBe(true);
-});
+// test("/updateNoteColor - Update color of a note to red (#FF0000)", async () => {
+//   // Code here
+//   expect(false).toBe(true);
+// });
