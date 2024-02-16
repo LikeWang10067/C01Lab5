@@ -26,25 +26,25 @@ test("/postNote - Post a note", async () => {
   expect(postNoteBody.response).toBe("Note added succesfully.");
 });
 
-// test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
-//   const deleteAllNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
-//     method: "DELETE",
-//     headers: {
-//       "Content-Type": "application/json",
-//     }
-//   });
+test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
+  const deleteAllNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
 
-//   await deleteAllNotesRes.json();
-//   expect(deleteAllNotesRes.status).toBe(200);
+  await deleteAllNotesRes.json();
+  expect(deleteAllNotesRes.status).toBe(200);
 
-//   const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`);
-//   const getAllNotesBody = await getAllNotesRes.json();
+  const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`);
+  const getAllNotesBody = await getAllNotesRes.json();
 
-//   expect(getAllNotesRes.status).toBe(200);
-//   // Check if the body is an empty array, indicating zero notes for getAllNotes
-//   // expect(getAllNotesBody).toEqual();
-//   expect(getAllNotesBody.response.length).toBe();
-// });
+  expect(getAllNotesRes.status).toBe(200);
+  // Check if the body is an empty array, indicating zero notes for getAllNotes
+  // expect(getAllNotesBody).toEqual();
+  expect(getAllNotesBody.response.length).toBe(0);
+});
 
 test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
 
@@ -97,7 +97,7 @@ test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
   await deleteNotesRes2.json();
 
   expect(getAllNotesRes.status).toBe(200);
-  expect(getAllNotesBody.length).toBe(2);
+  expect(getAllNotesBody.response.length).toBe(2);
   expect(getAllNotesBody[0].title).toBe("Note 1");
   expect(getAllNotesBody[1].title).toBe("Note 2");
 });
