@@ -26,23 +26,68 @@ test("/postNote - Post a note", async () => {
   expect(postNoteBody.response).toBe("Note added succesfully.");
 });
 
-test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
-  const response = await fetch(`${SERVER_URL}/getAllNotes`);
-  const body = await response.json();
+// test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
+//   const deleteAllNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
+//     method: "DELETE",
+//     headers: {
+//       "Content-Type": "application/json",
+//     }
+//   });
 
+//   await deleteAllNotesRes.json();
+//   expect(deleteAllNotesRes.status).toBe(200);
+
+//   const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`);
+//   const getAllNotesBody = await getAllNotesRes.json();
+
+//   expect(getAllNotesRes.status).toBe(200);
+//   // Check if the body is an empty array, indicating zero notes for getAllNotes
+//   // expect(getAllNotesBody).toEqual();
+//   expect(getAllNotesBody.response.length).toBe();
+// });
+
+test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
+  // Clear the database before the test
+  await fetch(`${SERVER_URL}/deleteAllNotes`, {
+    method: "DELETE",
+  });
+
+  await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title: "First", content: "Content1" }),
+  });
+
+  // Add the second note
+  await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title: "Second", content: "Content2" }),
+  });
+
+  const response = await fetch(`${SERVER_URL}/getAllNotes`);
+  const data = await response.json();
+
+  // Check that the HTTP status code is 200
   expect(response.status).toBe(200);
-  // Check if the body is an empty array, indicating zero notes for getAllNotes
-  expect(body).toEqual({"response": []});
+
+  // Check that the response contains exactly two notes
+  expect(data.response.length).toBe(2);
 });
 
-// test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
-//   // Insert two notes into the database before the request
-//   await Note.insertMany([{ title: "Note 1", content: "Content 1" }, { title: "Note 2", content: "Content 2" }]);
+//   const postNoteBody_1 = await postNoteRes_1.json();
   
-//   const response = await request(app).get('/getAllNotes');
-//   expect(response.statusCode).toBe(200);
-//   expect(response.body.length).toBe(2);
-//   // Optionally, check for content of the notes
+//   expect(postNoteRes_1.status).toBe(200);
+//   expect(postNoteBody_1.response).toBe("Note added succesfully.");
+  
+//   const response = await fetch(`${SERVER_URL}/getAllNotes`);
+//   const body = await response.json();
+//   expect(response.status).toBe(200);
+//   expect(body).toEqual();
 // });
 
 // test("/deleteNote - Delete a note", async () => {
