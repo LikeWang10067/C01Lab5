@@ -47,37 +47,93 @@ test("/postNote - Post a note", async () => {
 // });
 
 test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
-  // Clear the database before the test
-  await fetch(`${SERVER_URL}/deleteAllNotes`, {
+
+  const deleteNotesRes1 = await fetch(`${SERVER_URL}/deleteAllNotes`, {
     method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
   });
+  
+  await deleteNotesRes1.json();
 
-  await fetch(`${SERVER_URL}/postNote`, {
+  const note1 = {title: "Note 1", content: "Content 1" };
+  const note2 = {title: "Note 2", content: "Content 2" };
+
+  const postNote1Res = await fetch(`${SERVER_URL}/postNote`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title: "First", content: "Content1" }),
+    body: JSON.stringify(note1),
   });
+  const postNote1Body = await postNote1Res.json();
 
-  // Add the second note
-  await fetch(`${SERVER_URL}/postNote`, {
+  const postNote2Res = await fetch(`${SERVER_URL}/postNote`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title: "Second", content: "Content2" }),
+    body: JSON.stringify(note2),
+  });
+  const postNote2Body = await postNote2Res.json();
+
+  const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
   });
 
-  const response = await fetch(`${SERVER_URL}/getAllNotes`);
-  const data = await response.json();
+  const getAllNotesBody = await getAllNotesRes.json();
+ 
+  const deleteNotesRes2 = await fetch(`${SERVER_URL}/deleteAllNotes`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+  
+  await deleteNotesRes2.json();
 
-  // Check that the HTTP status code is 200
-  expect(response.status).toBe(200);
-
-  // Check that the response contains exactly two notes
-  expect(data.response.length).toBe(2);
+  expect(getAllNotesRes.status).toBe(200);
+  expect(getAllNotesBody.length).toBe(2);
+  expect(getAllNotesBody[0].title).toBe("Note 1");
+  expect(getAllNotesBody[1].title).toBe("Note 2");
 });
+
+// test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
+//   // Clear the database before the test
+//   await fetch(`${SERVER_URL}/deleteAllNotes`, {
+//     method: "DELETE",
+//   });
+
+//   await fetch(`${SERVER_URL}/postNote`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ title: "First", content: "Content1" }),
+//   });
+
+//   // Add the second note
+//   await fetch(`${SERVER_URL}/postNote`, {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ title: "Second", content: "Content2" }),
+//   });
+
+//   const response = await fetch(`${SERVER_URL}/getAllNotes`);
+//   const data = await response.json();
+
+//   // Check that the HTTP status code is 200
+//   expect(response.status).toBe(200);
+
+//   // Check that the response contains exactly two notes
+//   expect(data.response.length).toBe(2);
+// });
 
 //   const postNoteBody_1 = await postNoteRes_1.json();
   
