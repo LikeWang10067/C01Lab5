@@ -27,7 +27,7 @@ test("/postNote - Post a note", async () => {
 });
 
 test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
-
+  // delete every other notes
   const deleteNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
     method: "DELETE",
     headers: {
@@ -37,6 +37,7 @@ test("/getAllNotes - Return list of zero notes for getAllNotes", async () => {
   
   await deleteNotesRes.json();
   
+  // get all notes
   const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
     method: "GET",
     headers: {
@@ -84,6 +85,7 @@ test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
   });
   const postNote2Body = await postNote2Res.json();
 
+  // get all notes
   const getAllNotesRes = await fetch(`${SERVER_URL}/getAllNotes`, {
     method: "GET",
     headers: {
@@ -93,7 +95,7 @@ test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
 
   const getAllNotesBody = await getAllNotesRes.json();
 
-  // delete these 2 notes again
+  // delete these 2 notes
   const deleteNotesRes2 = await fetch(`${SERVER_URL}/deleteAllNotes`, {
     method: "DELETE",
     headers: {
@@ -272,4 +274,109 @@ test("/patchNote - Patch with just content", async () => {
   expect(patchNoteBody.response).toBe(`Document with ID ${noteId} patched.`);
   expect(deleteNoteRes.status).toBe(200);
   expect(deleteNoteBody.response).toBe(`Document with ID ${noteId} deleted.`);
+});
+
+test("/deleteAllNotes - Delete one note", async () => {
+  // delete every other notes
+  const deleteNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  await deleteNotesRes.json();
+
+  // create a new note
+  const Note = {title: "Day1", content: "Happy Cat!"};
+
+  const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Note),
+  });
+  const postNoteBody = await postNoteRes.json();
+
+  // delete all notes
+  const deleteNoteRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  const deleteNoteBody = await deleteNoteRes.json();
+
+  expect(postNoteRes.status).toBe(200);
+  expect(postNoteBody.response).toBe("Note added succesfully.");
+  expect(deleteNoteRes.status).toBe(200);
+  expect(deleteNoteBody.response).toBe(`1 note(s) deleted.`);
+});
+
+test("/deleteAllNotes - Delete three notes", async () => {
+  // delete every other notes
+  const deleteNotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  await deleteNotesRes.json();
+
+  // create 3 new notes
+  const Note1 = {title: "Day1", content: "Happy Cat!"};
+  const Note2 = {title: "Day2", content: "Happy Dog!"};
+  const Note3 = {title: "Day3", content: "Happy Mouse!"};
+
+  const postNoteRes1 = await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Note1),
+  });
+  const postNoteBody1 = await postNoteRes1.json();
+
+  const postNoteRes2 = await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Note2),
+  });
+  const postNoteBody2 = await postNoteRes2.json();
+
+  const postNoteRes3 = await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(Note3),
+  });
+  const postNoteBody3 = await postNoteRes3.json();
+
+  // delete all notes
+  const delete3NotesRes = await fetch(`${SERVER_URL}/deleteAllNotes`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  const deleteNoteBody = await delete3NotesRes.json();
+
+  expect(postNoteRes1.status).toBe(200);
+  expect(postNoteBody1.response).toBe("Note added succesfully.");
+
+  expect(postNoteRes2.status).toBe(200);
+  expect(postNoteBody2.response).toBe("Note added succesfully.");
+
+  expect(postNoteRes3.status).toBe(200);
+  expect(postNoteBody3.response).toBe("Note added succesfully.");
+
+  expect(delete3NotesRes.status).toBe(200);
+  expect(deleteNoteBody.response).toBe(`3 note(s) deleted.`);
 });
