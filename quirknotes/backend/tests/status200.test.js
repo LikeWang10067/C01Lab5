@@ -380,3 +380,50 @@ test("/deleteAllNotes - Delete three notes", async () => {
   expect(delete3NotesRes.status).toBe(200);
   expect(deleteNoteBody.response).toBe(`3 note(s) deleted.`);
 });
+
+test("/updateNoteColor - Update color of a note to red (#FF0000)", async () => {
+  // post a note
+  const Note = {title: "Color", content: "We want to test the color"};
+  
+  const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(Note),
+  });
+
+  const postNoteBody = await postNoteRes.json();
+  const noteId = postNoteBody.insertedId
+
+  // change the color of the note
+  const color = "#FF0000"
+  console.log(postNoteBody.insertedId)
+  const updateNoteColorRes = await fetch(`${SERVER_URL}/updateNoteColor/${noteId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        color: color,
+      }),
+  })
+
+  // delete a note
+  const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${noteId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  const deleteNoteBody = await deleteNoteRes.json();
+
+  const updateNoteColorBody = await updateNoteColorRes.json();
+  expect(postNoteRes.status).toBe(200);
+  expect(postNoteBody.response).toBe("Note added succesfully.");
+  expect(updateNoteColorRes.status).toBe(200);
+  expect(updateNoteColorBody.message).toBe("Note color updated successfully.");
+  expect(deleteNoteRes.status).toBe(200);
+  expect(deleteNoteBody.response).toBe(`Document with ID ${noteId} deleted.`);
+});
