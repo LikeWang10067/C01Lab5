@@ -112,8 +112,8 @@ test("/getAllNotes - Return list of two notes for getAllNotes", async () => {
 test("/deleteNote - Delete a note", async () => {
   // create a note
   const noteToBeDeleted = {
-    title: "NoteToBeDeleted", 
-    content: "I am leaving you, I am so so sorry..." 
+    title: "NoteToBeDeleted",
+    content: "I am leaving you, I am so so sorry..."
   };
 
   const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
@@ -124,8 +124,9 @@ test("/deleteNote - Delete a note", async () => {
     body: JSON.stringify(noteToBeDeleted),
   });
   const postNoteBody = await postNoteRes.json();
-  // delete a note
   const noteId = postNoteBody.insertedId;
+
+  // delete a note
   const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${noteId}`, {
     method: "DELETE",
     headers: {
@@ -134,8 +135,141 @@ test("/deleteNote - Delete a note", async () => {
   });
 
   const deleteNoteBody = await deleteNoteRes.json();
+
   expect(postNoteRes.status).toBe(200);
   expect(postNoteBody.response).toBe("Note added succesfully.");
+  expect(deleteNoteRes.status).toBe(200);
+  expect(deleteNoteBody.response).toBe(`Document with ID ${noteId} deleted.`);
+});
+
+test("/patchNote - Patch with content and title", async () => {
+  // create a new note
+  const oldNote = {title: "Old Title", content: "Make your own future"};
+  const newNote = {title: "New Title", content: "Make your own past"};
+
+  const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(oldNote),
+  });
+  const postNoteBody = await postNoteRes.json();
+  const noteId = postNoteBody.insertedId;
+
+  // patch the note
+  const patchNoteRes = await fetch(`${SERVER_URL}/patchNote/${noteId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newNote),
+  });
+
+  const patchNoteBody = await patchNoteRes.json();
+
+  // delete the note (avoid influencing the database)
+  const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${noteId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  const deleteNoteBody = await deleteNoteRes.json();
+
+  expect(postNoteRes.status).toBe(200);
+  expect(postNoteBody.response).toBe("Note added succesfully.");
+  expect(patchNoteRes.status).toBe(200);
+  expect(patchNoteBody.response).toBe(`Document with ID ${noteId} patched.`);
+  expect(deleteNoteRes.status).toBe(200);
+  expect(deleteNoteBody.response).toBe(`Document with ID ${noteId} deleted.`);
+});
+
+test("/patchNote - Patch with just title", async () => {
+  // create a new note
+  const oldNote = {title: "Old Title", content: "Don't change this"};
+  const newNote = {title: "New Title"};
+
+  const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(oldNote),
+  });
+  const postNoteBody = await postNoteRes.json();
+  const noteId = postNoteBody.insertedId;
+
+  // patch the note
+  const patchNoteRes = await fetch(`${SERVER_URL}/patchNote/${noteId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newNote),
+  });
+
+  const patchNoteBody = await patchNoteRes.json();
+
+  // delete the note (avoid influencing the database)
+  const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${noteId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  const deleteNoteBody = await deleteNoteRes.json();
+
+  expect(postNoteRes.status).toBe(200);
+  expect(postNoteBody.response).toBe("Note added succesfully.");
+  expect(patchNoteRes.status).toBe(200);
+  expect(patchNoteBody.response).toBe(`Document with ID ${noteId} patched.`);
+  expect(deleteNoteRes.status).toBe(200);
+  expect(deleteNoteBody.response).toBe(`Document with ID ${noteId} deleted.`);
+});
+
+test("/patchNote - Patch with just content", async () => {
+  // create a new note
+  const oldNote = {title: "Don't change this", content: "Old Content"};
+  const newNote = {content: "New Content"};
+
+  const postNoteRes = await fetch(`${SERVER_URL}/postNote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(oldNote),
+  });
+  const postNoteBody = await postNoteRes.json();
+  const noteId = postNoteBody.insertedId;
+
+  // patch the note
+  const patchNoteRes = await fetch(`${SERVER_URL}/patchNote/${noteId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newNote),
+  });
+
+  const patchNoteBody = await patchNoteRes.json();
+
+  // delete the note (avoid influencing the database)
+  const deleteNoteRes = await fetch(`${SERVER_URL}/deleteNote/${noteId}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  });
+
+  const deleteNoteBody = await deleteNoteRes.json();
+
+  expect(postNoteRes.status).toBe(200);
+  expect(postNoteBody.response).toBe("Note added succesfully.");
+  expect(patchNoteRes.status).toBe(200);
+  expect(patchNoteBody.response).toBe(`Document with ID ${noteId} patched.`);
   expect(deleteNoteRes.status).toBe(200);
   expect(deleteNoteBody.response).toBe(`Document with ID ${noteId} deleted.`);
 });
